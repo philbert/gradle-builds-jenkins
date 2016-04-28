@@ -4,23 +4,23 @@ node ('master') {
   parallel (
     phase1: { sh "echo startp1; echo endphase1" },
     phase2: { sh "echo startp2; echo endphase2" },
-    phase3: { sh "echo startp3; sleep 30; echo endphase3" },
-    phase4: { sh "echo startp4; echo foobar; sleep 60; echo endphase4" }
+    phase3: { sh "echo startp3; sleep 5; echo endphase3" },
+    phase4: { sh "echo startp4; echo foobar; sleep 10; echo endphase4" }
   )
   sh "echo 42 > data"
   stash includes: '*', name: 'binary'
 }
 
 stage "package"
-parallel  (
+parallel ('parallelised') (
   stream1: { 
-    node ('master') { 
+    node { 
       unstash "binary"
       sh "sleep 20s" 
       sh "echo stream1"
     } 
   },
-  stream2: ('master') { 
+  stream2: { 
     node { 
       unstash "binary"
       sh "echo hello2"
