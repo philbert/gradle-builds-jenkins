@@ -12,7 +12,7 @@ node ('master') {
 }
 
 stage "package"
-parallel ('parallelised') (
+parallel (
   stream1: { 
     node { 
       unstash "binary"
