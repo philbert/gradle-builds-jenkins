@@ -27,21 +27,23 @@ jenkins {
 
     defaultServer servers.demo
 
-    jobs {
-//        job {
-            dsl {
-                workflowJob('example') {
-                    definition {
-                        cpsScm {
-                            scm {
-                                git('https://github.com/philbert/gradle-builds-jenkins.git')
-                            }
-                        }
-                    }
+    dsl {
+        workflowJob('example') {
+            description "Job created by gradle-jenkins-plugin"
+            definition {
+                cps {
+                    // this doesn't work the way I expect either :(
+                    script(streamFileFromWorkspace('Jenkinsfile'))
                 }
-//                description "This job is created by gradle and the DSL plugin"
-//                displayName "gradle-created-pipeline-job"
+// This fails because cpsScm is introduced in jenkins-job-dsl 1.44
+//                cpsScm {
+//                    scm {
+//                        git('https://github.com/jenkinsci/job-dsl-plugin.git', 'master')
+//                        scriptPath('Jenkinsfile')
+//                    }
+//                }
             }
-        //}
+        }
     }
 }
+
