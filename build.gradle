@@ -39,8 +39,17 @@ jenkins {
             definition {
                 cpsScm {
                     scm {
-                        git('https://github.com/jenkinsci/job-dsl-plugin.git', 'master')
+                        git {
+                            remote {
+                                name('origin')
+                                url('https://github.com/philbert/gradle-builds-jenkins')
+                            }
+                            branch('master')
+                            //createTag is deprecated and documentation states should 
+                            //default to false, however it does not so we set it explicitly
+                            createTag false
                         scriptPath('Jenkinsfile')
+                        }
                     }
                 }
             }
