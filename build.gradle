@@ -18,45 +18,48 @@ buildscript {
 }
 
 
-apply plugin: "com.terrafolio.jenkins"
 
 // user specific variables
 def some_user = System.getenv('USER')
 
+apply plugin: "com.terrafolio.jenkins"
+
 jenkins {
-    // server definitions
-    servers {
-        demo {
-            url 'http://88.80.174.222:8080/'
-            secure true
-            username "phil"
-            password "phil"
-        }
-    }
+	// server definitions
+	servers {
+		demo {
+			url 'http://88.80.174.222:8080/'
+			secure true
+			username "phil"
+			password "phil"
+		}
+	}
 
-    defaultServer servers.demo
+	defaultServer servers.demo
 
-    dsl {
-        workflowJob(some_user + '_example_' + some_version) {
-            description "Job created by gradle-jenkins-plugin yay!" + some_user + some_string + some_url
-            definition {
-                cpsScm {
-                    scm {
-                        git {
-                            remote {
-                                name('origin')
-                                url(some_url)
-                            }
-                            branch('master')
-                            extensions {
-                                perBuildTag()
-                            }
-                        scriptPath('Jenkinsfile')
-                        }
-                    }
-                }
-            }
-        }
-    }
+	dsl {
+		(1..4).each { 
+			workflowJob("${some_user}_example_${it}") {
+				description "Job created by gradle-jenkins-plugin by ${some_user}!" 
+				definition {
+					cpsScm {
+						scm {
+							git {
+								remote {
+									name('origin')
+									url("${some_url}")
+								}
+								branch('master')
+								extensions {
+									perBuildTag()
+								}
+							scriptPath('Jenkinsfile')
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 }
 
