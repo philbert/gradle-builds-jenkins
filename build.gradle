@@ -20,6 +20,9 @@ buildscript {
 
 apply plugin: "com.terrafolio.jenkins"
 
+// user specific variables
+def some_user = System.getenv('USER')
+
 jenkins {
     // server definitions
     servers {
@@ -34,20 +37,20 @@ jenkins {
     defaultServer servers.demo
 
     dsl {
-        workflowJob('example') {
-            description "Job created by gradle-jenkins-plugin yay!"
+        workflowJob(some_user + '_example_' + some_version) {
+            description "Job created by gradle-jenkins-plugin yay!" + some_user + some_string + some_url
             definition {
                 cpsScm {
                     scm {
                         git {
                             remote {
                                 name('origin')
-                                url('https://github.com/philbert/gradle-builds-jenkins')
+                                url(some_url)
                             }
                             branch('master')
-                            //createTag is deprecated and documentation states should 
-                            //default to false, however it does not so we set it explicitly
-                            createTag false
+                            extensions {
+                                perBuildTag()
+                            }
                         scriptPath('Jenkinsfile')
                         }
                     }
